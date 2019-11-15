@@ -37,16 +37,17 @@
         MediaPlayer.prototype.pause = function() {
             this.media.pause();
         }
+        MediaPlayer.prototype.togglePlay = function() {
+            if(this.media.paused) {
+                this.play();
+            } else {
+                this.pause();
+            }
+        };
 
         const player = new MediaPlayer({ el: video }); // instanciamos y le pasamos el objeto de configuracion
 
-        button.onclick = () => {
-            if(player.media.paused){
-                player.play();
-            }else{
-                player.pause();
-            }
-        };
+        button.onclick = () => player.togglePlay();
     </script>
 
 </body>
