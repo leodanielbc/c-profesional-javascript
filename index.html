@@ -26,15 +26,16 @@
         const video = document.querySelector("video");
         const button = document.querySelector("button");
 
-        function MediaPlayer() { //clase
+        function MediaPlayer(config) { //clase
+            this.media = config.el
         }
 
         // añadimos metodos a la clase o prototipo, en este caso se llama play
         MediaPlayer.prototype.play = function() {
-            video.play();
+            this.media.play(); // leemos media, con this guardamos la instancia de MediaPlayer o cualquier otro objeto
         }
 
-        const player = new MediaPlayer(); // instanciamos
+        const player = new MediaPlayer({ el: video }); // instanciamos y le pasamos el objeto de configuracion
         button.onclick = () => player.play();
     </script>
 
