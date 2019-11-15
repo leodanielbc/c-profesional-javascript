@@ -34,9 +34,19 @@
         MediaPlayer.prototype.play = function() {
             this.media.play(); // leemos media, con this guardamos la instancia de MediaPlayer o cualquier otro objeto
         }
+        MediaPlayer.prototype.pause = function() {
+            this.media.pause();
+        }
 
         const player = new MediaPlayer({ el: video }); // instanciamos y le pasamos el objeto de configuracion
-        button.onclick = () => player.play();
+
+        button.onclick = () => {
+            if(player.media.paused){
+                player.play();
+            }else{
+                player.pause();
+            }
+        };
     </script>
 
 </body>
