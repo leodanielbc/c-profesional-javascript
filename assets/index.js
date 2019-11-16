@@ -7,9 +7,12 @@ const button = document.querySelector("button");
 const muteButton = document.querySelector('[id="muteButton"]');
 
 // instanciamos y le pasamos el objeto de configuracion
-const player = new MediaPlayer({ el: video, plugins:[
-    new AutoPlay()
-] });
+const player = new MediaPlayer({
+    el: video,
+    plugins:[
+        //new AutoPlay()
+    ]
+});
 
 button.onclick = () => player.togglePlay();
 // Operador condicional (ternario)
