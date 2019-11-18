@@ -6,8 +6,22 @@ function MediaPlayer(config) { //clase
 }
 
 MediaPlayer.prototype._initPlugins = function() {
+    const player = {
+        play: () => this.play(),
+        pause: () => this.pause(),
+        media: this.media, //hace referencia al objeto MediaPlayer dentro del Objeto player
+        get muted() { // propiedad virtual
+            return this.media.muted;
+        },
+
+        set muted(value) { //propiedad virtual
+            this.media.muted = value;
+        }
+    };
+
+
     this.plugins.forEach(plugin => {
-        plugin.run(this);//con this se refiere a la instancia de MediaPlayer
+        plugin.run(player); //aqui va tomar como this => player, y con esto solo le damos control al plugin solo a ciertas funciones
     });
 }
 

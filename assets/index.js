@@ -10,7 +10,7 @@ const muteButton = document.querySelector('[id="muteButton"]');
 const player = new MediaPlayer({
     el: video,
     plugins:[
-        //new AutoPlay()
+        new AutoPlay()
     ]
 });
 
