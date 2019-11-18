@@ -17,26 +17,45 @@
             <button id="fastest">Get Fastest Top Movies</button>
         </li>
     </ul>
+
+    <ul id="movies"></ul>
+
     <script>
         // The Movie Database API: https://developers.themoviedb.org/3/getting-started/introduction
         const apiKey = 'b89fc45c2067cbd33560270639722eae';
 
-        function getMovie(id) {
+        async function getMovie(id) {
             const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`;
-            return fetch(url).then(response => response.json());
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
         }
 
-        function getPopularMovies(){
+        async function getPopularMovies() {
             const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}`;
-            return fetch(url)
-                .then(response => response.json())
-                .then(data => data.results);
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results;
         }
 
-        function getTopMoviesIds(n = 3){
-            return getPopularMovies().then(popularMovies =>
-                popularMovies.slice(0, n).map(movie => movie.id)
-            );
+        async function getTopMoviesIds(n = 3) {
+            // return getPopularMovies().then(popularMovies =>
+            //     popularMovies.slice(0, n).map(movie => movie.id)
+            // );
+
+            //una forma con sync y await
+            // try {
+            //     const popularMovies = await getPopularMovies(); // con await le decimos que espere hasta que la promesa se resuelva
+            // } catch (error) {
+            //     console.log(error.message);
+            // }
+
+            // otra forma, obtenemos solo los ids de la movie
+            const popularMovies = await getPopularMovies();
+            //con slice recortamos el array de 0 a n
+            const ids = popularMovies.slice(0, n).map(movie => movie.id);
+            return ids;
+
         }
 
         function renderMovies(movies) {
@@ -54,6 +73,54 @@
                 movieList.appendChild(listItem);
             });
         }
+
+        //peliculas en secuencia
+        async function getTopMovieInSequence() {
+            const ids = await getTopMoviesIds()
+            const movies = [];
+
+            // utilizamos un loop para ir llenando con todos los detalles de la peliculas
+            for (const id of ids) {
+                const movie = await getMovie(id);
+                movies.push(movie);
+            }
+            return movies;
+        }
+
+        //peliculas en paralelo
+        async function getTopMoviesInParallel() {
+            const ids= await getTopMoviesIds();
+            const moviePromises = ids.map(id => getMovie(id)); // cada uno de los ids los convertimos a una promesa
+
+            // movies va a contener objetos que representas las movies, si una de las promesas da error, todo da error
+            const movies = await Promise.all(moviePromises);
+            return movies;
+        }
+
+        async function getFastestTopMovie() {
+            const ids = await getTopMoviesIds();
+            const moviePromises = ids.map(id => getMovie(id));
+
+            // La 1mera promesa q se cumpla se va almacenar en movie
+            const movie = await Promise.race(moviePromises);
+            return movie;
+        }
+
+
+        document.getElementById('sequence').onclick = async function() {
+            const movies = await getTopMovieInSequence();
+            renderMovies(movies); // aqui presentamos la lista
+        }
+        document.getElementById('parallel').onclick = async function() {
+            const movies = await getTopMoviesInParallel();
+            renderMovies(movies); // aqui presentamos la lista
+        }
+        document.getElementById('fastest').onclick = async function() {
+            const movie = await getFastestTopMovie();
+
+            renderMovies([movie]); // aqui presentamos la lista
+        }
+
 
     </script>
 </body>
