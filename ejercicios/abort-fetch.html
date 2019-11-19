@@ -18,6 +18,7 @@
         const img = document.getElementById('huge-image');
         const loadButton = document.getElementById('load');
         const stopButton = document.getElementById('stop');
+
         let controller;
 
         function startLoading() {
@@ -34,10 +35,24 @@
 
         loadButton.onclick = async function() {
             startLoading();
+
+            controller = new AbortController(); // da controles para poder detener una ejecucion
+
+            try {
+                const response = await fetch(url, { signal: controller.signal }); //agregamos un objeto de configuracion
+                const blob = await response.blob(); // blob es el binario de la peticion
+                const imgUrl = URL.createObjectURL(blob); // convierte en una URL
+                img.src = imgUrl;
+
+            } catch (error) {
+                console.log(error.message); // imprime un mensaje cuando se cancela la carga de la imagen
+            }
+
             stopLoading();
         };
 
         stopButton.onclick = function() {
+            controller.abort();
             stopLoading();
         };
     </script>
