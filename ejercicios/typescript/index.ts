@@ -51,3 +51,28 @@ function fullName(firstName: string, lastName: string = 'Smith'): string {
 }
 const user = fullName('Agente');
 console.log(user);
+
+// Interfaces
+interface Rectangulo {
+    ancho: number,
+    alto: number
+    color?: Color
+}
+
+let rect: Rectangulo = {
+    ancho: 4,
+    alto:4,
+    color: Color.Azul
+}
+
+function area(r: Rectangulo): number{
+    return r.ancho * r.alto;
+}
+
+const areaRect = area(rect);
+console.log(areaRect);
+
+rect.toString = function() {
+    return this.color ? `Un rectangulo ${this.color}` : `Un rectangulo`;
+}
+console.log(rect.toString());
