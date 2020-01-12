@@ -1,23 +1,28 @@
 class MediaPlayer {
+
+    media: HTMLMediaElement;
+    plugins: Array<any>;
+
     constructor(config) {
         this.media = config.el;
         this.plugins = config.plugins || [];
-        this._initPlugins();
+        this.initPlugins();
     }
-    _initPlugins() {
-        const player = {
-            play: () => this.play(),
-            pause: () => this.pause(),
-            media: this.media,
-            get muted() {
-                return this.media.muted;
-            },
-            set muted(value) {
-                this.media.muted = value;
-            }
-        };
+    private initPlugins() {
+        // const player = {
+        //     play: () => this.play(),
+        //     pause: () => this.pause(),
+        //     media: this.media,
+        //     get muted() {
+        //         return this.media.muted;
+        //     },
+        //     set muted(value) {
+        //         this.media.muted = value;
+        //     }
+        // };
+
         this.plugins.forEach(plugin => {
-            plugin.run(player); //aqui va tomar como this => player, y con esto solo le damos control al plugin solo a ciertas funciones
+            plugin.run(this); //aqui va tomar como this => player, y con esto solo le damos control al plugin solo a ciertas funciones
         });
     }
     // añadimos metodos a la clase o prototipo, en este caso se llama play
